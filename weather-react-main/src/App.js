@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './index.css'; // Import the CSS file
+import './index.css'; 
 
 function App() {
   const [data, setData] = useState({});
   const [location, setLocation] = useState('');
-  const [isCelsius, setIsCelsius] = useState(false); // State to track temperature unit
+  const [isCelsius, setIsCelsius] = useState(false); 
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=${isCelsius ? 'metric' : 'imperial'}&appid=320383e72a43e611f0d9f8621cb1e811`;
 
@@ -26,7 +26,6 @@ function App() {
   return (
     <div className="app">
       <div className="search-container">
-      <button onClick={toggleUnit}>{isCelsius ? 'F' : 'C'}</button>
         <input
           value={location}
           onChange={(event) => setLocation(event.target.value)}
@@ -36,22 +35,34 @@ function App() {
         />
       </div>
       <div className="weather-info">
-        <div className="location">{data?.name}</div>
-        <div className="date">{new Date().toDateString()}</div>
-      </div>
-      <div className="weather">
-        {data.weather ? (
-          <img
-            className="weather-icon"
-            src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`}
-            alt="icon"
-          />
-        ) : null}
+        <div className="header-container">
+          <div className="location-date-container">
+            <div className="location">{data?.name} </div> 
+            <div className="date">{new Date().toDateString()}</div>
+            <div className="button1"><button onClick={toggleUnit} className={isCelsius ? 'fahrenheit' : 'celsius'}>
+          {isCelsius ? 'Fahrenheit' : 'Celsius'}
+        </button></div>
+          </div>
+        </div>
       </div>
       <div className="container">
-        <div className="temp">
-          {data.main ? <h1>{isCelsius ? ((data.main.temp - 32) * 5 / 9).toFixed() : data.main.temp.toFixed()}°{isCelsius ? 'C' : 'F'}</h1> : null}
+        <div className="temp-left">
+          <div className="temp">
+            {data.main ? (
+              <>
+                {data.weather ? (
+                  <img
+                    className="weather-icon"
+                    src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`}
+                    alt="icon"
+                  />
+                ) : null}
+                <h1>{isCelsius ? ((data.main.temp - 32) * 5 / 9).toFixed() : data.main.temp.toFixed()}°{isCelsius ? 'C' : 'F'}</h1>
+              </>
+            ) : null}
+          </div>
         </div>
+        <div className="vertical-divider"></div>
         <div className="dashboard">
           <div className="temp_min">
             {data.main ? <h1>{isCelsius ? ((data.main.temp_min - 32) * 5 / 9).toFixed() : data.main.temp_min.toFixed()}°{isCelsius ? 'C' : 'F'}</h1> : null}
