@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './index.css'; 
 
 function App() {
   const [data, setData] = useState({});
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState('Charlotte'); // Default location set to 'Charlotte'
   const [isCelsius, setIsCelsius] = useState(false); 
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=${isCelsius ? 'metric' : 'imperial'}&appid=320383e72a43e611f0d9f8621cb1e811`;
+  useEffect(() => {
+    fetchData();
+  }, []); // Run only once when component mounts
+
+  const fetchData = () => {
+    axios.get(buildUrl()).then((response) => {
+      setData(response.data);
+      console.log(response.data);
+    });
+  };
+
+  const buildUrl = () => {
+    return `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=${isCelsius ? 'metric' : 'imperial'}&appid=320383e72a43e611f0d9f8621cb1e811`;
+  };
 
   const searchLocation = (event) => {
     if (event.key === 'Enter') {
-      axios.get(url).then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      });
-      setLocation('');
+      fetchData();
     }
   };
 
@@ -25,6 +34,7 @@ function App() {
 
   return (
     <div className="app">
+      <img src="/weather-react-main/public/assets/Logo_Weather.png" alt="Logo" class="logo"></img>
       <div className="search-container">
         <input
           value={location}
